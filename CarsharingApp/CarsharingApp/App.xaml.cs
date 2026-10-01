@@ -1,4 +1,6 @@
-﻿namespace CarsharingApp;
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace CarsharingApp;
 
 public partial class App : Application
 {
@@ -6,7 +8,6 @@ public partial class App : Application
     {
         InitializeComponent();
 
-        MainPage = new NavigationPage(new Pages.LoginPage()); // авторизация
-        //MainPage = new NavigationPage(new Pages.RegistrationPage()); // регистрация
+        MainPage = new AppShell();
     }
 }
