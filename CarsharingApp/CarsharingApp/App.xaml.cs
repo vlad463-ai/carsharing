@@ -1,13 +1,12 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace CarsharingApp;
-
-public partial class App : Application
+﻿namespace CarsharingApp
 {
-    public App()
+    public partial class App : Application
     {
-        InitializeComponent();
+        public App()
+        {
+            InitializeComponent();
 
-        MainPage = new AppShell();
+            MainPage = new AppShell();
+        }
     }
 }
