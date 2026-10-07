@@ -8,6 +8,7 @@ public partial class RegistrationPage : ContentPage
 {
     private readonly UserRepository _userRepo;
 
+
     public RegistrationPage()
     {
         InitializeComponent();
