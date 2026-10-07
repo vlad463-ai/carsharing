@@ -65,4 +65,19 @@
 		<PackageReference Include="Npgsql" Version="10.0.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="Pages\CarsPage.xaml.cs">
+	    <DependentUpon>CarsPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\RegistrationPage.xaml.cs">
+	    <DependentUpon>RegistrationPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\CarsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

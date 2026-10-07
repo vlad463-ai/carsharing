@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarsharingApp.Pages.CarsPage"
+             Title="Автомобили">
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Button x:Name="RefreshButton" Text="Обновить" Clicked="OnRefreshClicked" />
+        <Label x:Name="ResultLabel" />
+        <CollectionView x:Name="CarsList">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="0,5" Padding="10">
+                        <VerticalStackLayout>
+                            <Label Text="{Binding DisplayName}" FontSize="18" FontAttributes="Bold" />
+                            <Label Text="{Binding PlateNumber}" FontSize="14" TextColor="Gray" />
+                            <Label Text="{Binding DisplayPrice}" FontSize="16" />
+                            <Label Text="{Binding Rating, StringFormat='Рейтинг: {0:F1}'}" FontSize="14" />
+                        </VerticalStackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
