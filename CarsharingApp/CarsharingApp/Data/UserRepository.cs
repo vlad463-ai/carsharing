@@ -8,6 +8,7 @@ namespace CarsharingApp.Data
     {
         private readonly DatabaseManager _db;
 
+
         public UserRepository(DatabaseManager db)
         {
             _db = db;
