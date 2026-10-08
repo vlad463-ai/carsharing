@@ -12,6 +12,7 @@ namespace CarsharingApp.Models
         public string Email { get; set; }
         public decimal Rating { get; set; }
 
+
         public bool ValidateData()
         {
             if (string.IsNullOrWhiteSpace(Login)) return false;
