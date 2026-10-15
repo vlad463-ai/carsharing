@@ -4,8 +4,20 @@
              x:Class="CarsharingApp.Pages.CarsPage"
              Title="Автомобили">
     <VerticalStackLayout Padding="20" Spacing="10">
+
+        <!-- ФИЛЬТРЫ -->
+        <Entry x:Name="SearchEntry" 
+               Placeholder="Поиск по марке или модели" 
+               TextChanged="OnFilterChanged" />
+
+        <Entry x:Name="MaxPriceEntry" 
+               Placeholder="Макс. цена за минуту" 
+               Keyboard="Numeric" 
+               TextChanged="OnFilterChanged" />
+
         <Button x:Name="RefreshButton" Text="Обновить" Clicked="OnRefreshClicked" />
         <Label x:Name="ResultLabel" />
+
         <CollectionView x:Name="CarsList">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
