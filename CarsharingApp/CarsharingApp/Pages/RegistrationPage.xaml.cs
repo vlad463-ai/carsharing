@@ -13,7 +13,8 @@ public partial class RegistrationPage : ContentPage
     {
         InitializeComponent();
 
-        var db = new DatabaseManager("Host=localhost;Port=5432;Database=Carsharing;Username=postgres;Password=123");
+        //var db = new DatabaseManager("Host=localhost;Port=5432;Database=Carsharing;Username=postgres;Password=123");
+        var db = new DatabaseManager("Host=192.168.1.48;Port=5432;Database=Carsharing;Username=st53-5;Password=535");
         _userRepo = new UserRepository(db);
     }
 

@@ -65,4 +65,10 @@
 		<PackageReference Include="Npgsql" Version="10.0.3" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <MauiXaml Update="Pages\TripsPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	</ItemGroup>
+
 </Project>

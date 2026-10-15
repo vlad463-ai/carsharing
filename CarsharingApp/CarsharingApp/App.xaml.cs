@@ -1,12 +1,11 @@
-﻿namespace CarsharingApp
-{
-    public partial class App : Application
-    {
-        public App()
-        {
-            InitializeComponent();
+﻿namespace CarsharingApp;
 
-            MainPage = new NavigationPage(new Pages.RegistrationPage());
-        }
+public partial class App : Application
+{
+    public App()
+    {
+        InitializeComponent();
+
+        MainPage = new NavigationPage(new Pages.TripsPage());
     }
 }
