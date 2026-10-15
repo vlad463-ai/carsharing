@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+		<RootNamespace>CarsharingApp.Tests</RootNamespace>
+		<AssemblyName>CarsharingApp.Tests</AssemblyName>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<OutputType>Library</OutputType>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+		<PackageReference Include="MSTest.TestAdapter" Version="3.1.1" />
+		<PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\CarsharingApp\CarsharingApp.csproj" />
+	</ItemGroup>
+
+</Project>
