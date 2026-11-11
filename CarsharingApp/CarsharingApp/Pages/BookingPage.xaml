@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarsharingApp.Pages.BookingPage"
+             Title="Бронирование">
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Label Text="Выберите время бронирования" FontSize="18" FontAttributes="Bold" />
+
+        <Label Text="Начало:" />
+        <DatePicker x:Name="StartDatePicker" />
+        <TimePicker x:Name="StartTimePicker" />
+
+        <Label Text="Окончание:" />
+        <DatePicker x:Name="EndDatePicker" />
+        <TimePicker x:Name="EndTimePicker" />
+
+        <Button x:Name="BookButton" Text="Забронировать" Clicked="OnBookClicked" />
+        <Label x:Name="ResultLabel" TextColor="Red" />
+    </VerticalStackLayout>
+</ContentPage>
