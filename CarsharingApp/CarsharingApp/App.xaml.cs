@@ -5,8 +5,8 @@
         public App()
         {
             InitializeComponent();
-
-            MainPage = new NavigationPage(new Pages.RegistrationPage());
+            MainPage = new NavigationPage(new Pages.BookingPage());
+            //MainPage = new NavigationPage(new Pages.RegistrationPage());
         }
     }
 }
