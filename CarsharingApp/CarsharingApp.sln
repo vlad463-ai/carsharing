@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsharingApp", "Carsharing
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsharingApp.RegTests", "CarsharingApp.RegTests\CarsharingApp.RegTests.csproj", "{11EAD907-F491-47A1-945E-ADC83F9C3962}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarsharingApp.TripTests", "CarsharingApp.TripTests\CarsharingApp.TripTests.csproj", "{B414EEB4-2767-4825-9FC1-3F35247A674D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{11EAD907-F491-47A1-945E-ADC83F9C3962}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11EAD907-F491-47A1-945E-ADC83F9C3962}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11EAD907-F491-47A1-945E-ADC83F9C3962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B414EEB4-2767-4825-9FC1-3F35247A674D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B414EEB4-2767-4825-9FC1-3F35247A674D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B414EEB4-2767-4825-9FC1-3F35247A674D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B414EEB4-2767-4825-9FC1-3F35247A674D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
