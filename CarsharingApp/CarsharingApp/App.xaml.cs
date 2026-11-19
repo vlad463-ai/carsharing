@@ -6,7 +6,8 @@
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
+            //MainPage = new NavigationPage(new Pages.RegistrationPage());
+            MainPage = new NavigationPage(new Pages.ProfilePage());
         }
     }
 }
