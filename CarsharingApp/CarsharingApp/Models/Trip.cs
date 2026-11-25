@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 
 namespace CarsharingApp.Models
 {
     public class Trip
     {
         public int Id { get; set; }
+        public int BookingId { get; set; }
         public int UserId { get; set; }
         public int CarId { get; set; }
         public DateTime StartedAt { get; set; }
