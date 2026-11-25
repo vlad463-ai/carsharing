@@ -2,6 +2,8 @@
 
 Приложение для Windows на .NET 8 / MAUI 8.0.100. Откройте `CarsharingApp/CarsharingApp.sln` в Visual Studio с установленной рабочей нагрузкой .NET MAUI.
 
+Windows-проект настроен на запуск без MSIX (`WindowsPackageType=None`, профиль запуска `Project`), поэтому установка пакета для запуска не требуется.
+
 ## Сборка и тесты
 
 ```powershell
