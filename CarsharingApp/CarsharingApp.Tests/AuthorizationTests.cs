@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CarsharingApp.Models;
 
@@ -40,7 +40,7 @@ namespace CarsharingApp.Tests
         [TestMethod]
         public void Authorize_NonExistentUser_ReturnsNull()
         {
-            User user = null;
+            User? user = null;
             Assert.IsNull(user, "Несуществующий пользователь → null");
         }
 

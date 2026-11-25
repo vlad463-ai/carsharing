@@ -9,17 +9,49 @@ namespace CarsharingApp.Pages;
 public partial class CarsPage : ContentPage
 {
     private readonly CarRepository _carRepo;
+    private readonly int _currentUserId;
     private List<Car> _allCars = new();
 
-    public CarsPage()
+    public CarsPage(int userId)
     {
+        _currentUserId = userId;
         InitializeComponent();
-
-        //var db = new DatabaseManager("Host=localhost;Port=5432;Database=carsharing;Username=postgres;Password=123");
-        var db = new DatabaseManager("Host=192.168.1.48;Port=5432;Database=Carsharing;Username=st53-5;Password=535");
+        var db = DatabaseSettings.CreateDatabase();
         _carRepo = new CarRepository(db);
 
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
         LoadCars();
+    }
+
+    private async void OnBookClicked(object sender, EventArgs e)
+    {
+        if (sender is Button { BindingContext: Car car })
+            await Navigation.PushAsync(new BookingPage(_currentUserId, car.Id));
+    }
+
+    private async void OnReviewsClicked(object sender, EventArgs e)
+    {
+        if (sender is Button { BindingContext: Car car })
+            await Navigation.PushAsync(new ReviewsPage(_currentUserId, car.Id));
+    }
+
+    private async void OnProfileClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new ProfilePage(_currentUserId));
+
+    private async void OnHistoryClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new TripsPage(_currentUserId));
+
+    private async void OnTripClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new TripPage(_currentUserId));
+
+    private async void OnLogoutClicked(object sender, EventArgs e)
+    {
+        Navigation.InsertPageBefore(new LoginPage(), this);
+        await Navigation.PopAsync();
     }
 
     private void LoadCars()
@@ -31,7 +63,7 @@ public partial class CarsPage : ContentPage
         }
         catch (Exception ex)
         {
-            ResultLabel.Text = "Îøèáêà: " + ex.Message;
+            ResultLabel.Text = "ÐžÑˆÐ¸Ð±ÐºÐ°: " + ex.Message;
         }
     }
 
@@ -39,7 +71,7 @@ public partial class CarsPage : ContentPage
     {
         var filtered = _allCars.AsEnumerable();
 
-        // Ôèëüòð ïî ìàðêå èëè ìîäåëè
+        // Ð¤Ð¸Ð»ÑŒÑ‚Ñ€ Ð¿Ð¾ Ð¼Ð°Ñ€ÐºÐµ Ð¸Ð»Ð¸ Ð¼Ð¾Ð´ÐµÐ»Ð¸
         string search = SearchEntry?.Text?.Trim() ?? "";
         if (!string.IsNullOrEmpty(search))
         {
@@ -48,7 +80,7 @@ public partial class CarsPage : ContentPage
                 c.Model.Contains(search, StringComparison.OrdinalIgnoreCase));
         }
 
-        // Ôèëüòð ïî ìàêñèìàëüíîé öåíå
+        // Ð¤Ð¸Ð»ÑŒÑ‚Ñ€ Ð¿Ð¾ Ð¼Ð°ÐºÑÐ¸Ð¼Ð°Ð»ÑŒÐ½Ð¾Ð¹ Ñ†ÐµÐ½Ðµ
         if (decimal.TryParse(MaxPriceEntry?.Text, out decimal maxPrice) && maxPrice > 0)
         {
             filtered = filtered.Where(c => c.PricePerMin <= maxPrice);
@@ -58,9 +90,9 @@ public partial class CarsPage : ContentPage
         CarsList.ItemsSource = result;
 
         if (result.Count == 0)
-            ResultLabel.Text = "Íè÷åãî íå íàéäåíî";
+            ResultLabel.Text = "ÐÐ¸Ñ‡ÐµÐ³Ð¾ Ð½Ðµ Ð½Ð°Ð¹Ð´ÐµÐ½Ð¾";
         else
-            ResultLabel.Text = $"Íàéäåíî: {result.Count} àâòî";
+            ResultLabel.Text = $"ÐÐ°Ð¹Ð´ÐµÐ½Ð¾: {result.Count} Ð°Ð²Ñ‚Ð¾";
     }
 
     private void OnFilterChanged(object sender, TextChangedEventArgs e)

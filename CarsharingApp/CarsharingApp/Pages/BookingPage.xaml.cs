@@ -5,15 +5,22 @@ namespace CarsharingApp.Pages;
 public partial class BookingPage : ContentPage
 {
     private readonly BookingRepository _bookingRepo;
-    private readonly int _currentUserId = 6; // ID юзера из БД
-    private readonly int _currentCarId = 1;   // ID машины из БД
+    private readonly int _currentUserId;
+    private readonly int _currentCarId;
 
-    public BookingPage()
+    public BookingPage(int userId, int carId)
     {
         InitializeComponent();
+        _currentUserId = userId;
+        _currentCarId = carId;
 
-        var db = new DatabaseManager("Host=localhost;Port=5432;Database=Carsharing;Username=postgres;Password=123");
+        var db = DatabaseSettings.CreateDatabase();
         _bookingRepo = new BookingRepository(db);
+        var start = DateTime.Now;
+        StartDatePicker.Date = start.Date;
+        StartTimePicker.Time = start.TimeOfDay;
+        EndDatePicker.Date = start.AddHours(1).Date;
+        EndTimePicker.Time = start.AddHours(1).TimeOfDay;
     }
 
     private async void OnBookClicked(object sender, EventArgs e)
@@ -28,19 +35,20 @@ public partial class BookingPage : ContentPage
             if (success)
             {
                 ResultLabel.TextColor = Colors.Green;
-                ResultLabel.Text = "Бронь успешно создана!";
+                ResultLabel.Text = "Р‘СЂРѕРЅСЊ СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅР°!";
                 BookButton.IsEnabled = false;
+                await Navigation.PushAsync(new TripPage(_currentUserId));
             }
             else
             {
                 ResultLabel.TextColor = Colors.Red;
-                ResultLabel.Text = "Ошибка: машина занята или неверное время.";
+                ResultLabel.Text = "РћС€РёР±РєР°: РјР°С€РёРЅР° Р·Р°РЅСЏС‚Р° РёР»Рё РЅРµРІРµСЂРЅРѕРµ РІСЂРµРјСЏ.";
             }
         }
         catch (Exception ex)
         {
             ResultLabel.TextColor = Colors.Red;
-            ResultLabel.Text = "Ошибка БД: " + ex.Message;
+            ResultLabel.Text = "РћС€РёР±РєР° Р‘Р”: " + ex.Message;
         }
     }
 }

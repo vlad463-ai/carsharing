@@ -9,6 +9,7 @@
 
         <Button x:Name="StartTripBtn" Text="Начать поездку" Clicked="OnStartTripClicked" />
         <Button x:Name="FinishTripBtn" Text="Завершить поездку" Clicked="OnFinishTripClicked" IsEnabled="False" />
+        <Button x:Name="CancelBookingBtn" Text="Отменить бронь" Clicked="OnCancelBookingClicked" />
 
         <Label x:Name="StatusLabel" Text="Ожидание..." FontSize="16" />
         <Label x:Name="ResultLabel" TextColor="Green" FontSize="16" FontAttributes="Bold" />

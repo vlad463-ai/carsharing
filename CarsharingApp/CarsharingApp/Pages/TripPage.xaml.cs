@@ -5,78 +5,68 @@ namespace CarsharingApp.Pages;
 public partial class TripPage : ContentPage
 {
     private readonly TripRepository _tripRepo;
-    private readonly int _currentUserId = 6;      // ID юзера (из БД)
-    private readonly int _currentCarId = 1;       // ID машины (из БД)
-    private readonly int _currentBookingId = 12;  // ID активной брони (замени на свой!)
-    private readonly decimal _pricePerMin = 10.00m; // Цена за минуту
-
+    private readonly BookingRepository _bookingRepo;
+    private readonly int _currentUserId;
     private int _activeTripId = -1;
 
-    public TripPage()
+    public TripPage(int userId)
     {
         InitializeComponent();
-
-        var db = new DatabaseManager("Host=localhost;Port=5432;Database=Carsharing;Username=postgres;Password=123");
+        _currentUserId = userId;
+        var db = DatabaseSettings.CreateDatabase();
         _tripRepo = new TripRepository(db);
+        _bookingRepo = new BookingRepository(db);
     }
 
-    private async void OnStartTripClicked(object sender, EventArgs e)
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        try { RefreshState(); }
+        catch (Exception ex) { ResultLabel.Text = "РћС€РёР±РєР° Р‘Р”: " + ex.Message; }
+    }
+
+    private void RefreshState()
+    {
+        _activeTripId = _tripRepo.GetActiveTripId(_currentUserId);
+        var booking = _bookingRepo.GetActiveForUser(_currentUserId);
+        StartTripBtn.IsEnabled = _activeTripId < 0 && booking != null;
+        FinishTripBtn.IsEnabled = _activeTripId > 0;
+        CancelBookingBtn.IsEnabled = _activeTripId < 0 && booking != null;
+        StatusLabel.Text = _activeTripId > 0 ? "РџРѕРµР·РґРєР° РёРґС‘С‚" : booking == null ? "РќРµС‚ Р°РєС‚РёРІРЅРѕР№ Р±СЂРѕРЅРё" : $"Р‘СЂРѕРЅСЊ: {booking.DisplayPeriod}";
+    }
+
+    private void OnStartTripClicked(object sender, EventArgs e)
     {
         try
         {
-            bool success = _tripRepo.StartTrip(_currentBookingId, _currentUserId, _currentCarId);
-
-            if (success)
-            {
-                _activeTripId = _tripRepo.GetActiveTripId(_currentUserId);
-                StatusLabel.Text = "Поездка началась!";
-                ResultLabel.Text = "Время пошло...";
-                StartTripBtn.IsEnabled = false;
-                FinishTripBtn.IsEnabled = true;
-            }
-            else
-            {
-                ResultLabel.TextColor = Colors.Red;
-                ResultLabel.Text = "Ошибка: не удалось начать поездку.";
-            }
+            var booking = _bookingRepo.GetActiveForUser(_currentUserId);
+            ResultLabel.Text = booking != null && _tripRepo.StartTrip(booking.Id, _currentUserId, booking.CarId)
+                ? "РџРѕРµР·РґРєР° РЅР°С‡Р°Р»Р°СЃСЊ!" : "РќРµ СѓРґР°Р»РѕСЃСЊ РЅР°С‡Р°С‚СЊ РїРѕРµР·РґРєСѓ. РџСЂРѕРІРµСЂСЊС‚Рµ РІСЂРµРјСЏ Рё СЃРѕСЃС‚РѕСЏРЅРёРµ Р±СЂРѕРЅРё.";
+            RefreshState();
         }
-        catch (Exception ex)
-        {
-            ResultLabel.TextColor = Colors.Red;
-            ResultLabel.Text = "Ошибка БД: " + ex.Message;
-        }
+        catch (Exception ex) { ResultLabel.Text = "РћС€РёР±РєР° Р‘Р”: " + ex.Message; }
     }
 
-    private async void OnFinishTripClicked(object sender, EventArgs e)
+    private void OnFinishTripClicked(object sender, EventArgs e)
     {
         try
         {
-            if (_activeTripId == -1)
-            {
-                ResultLabel.TextColor = Colors.Red;
-                ResultLabel.Text = "Нет активной поездки.";
-                return;
-            }
-
-            bool success = _tripRepo.FinishTrip(_activeTripId, _pricePerMin, out decimal totalCost);
-
-            if (success)
-            {
-                StatusLabel.Text = "Поездка завершена.";
-                ResultLabel.TextColor = Colors.Green;
-                ResultLabel.Text = $"К оплате: {totalCost} ?";
-                FinishTripBtn.IsEnabled = false;
-            }
-            else
-            {
-                ResultLabel.TextColor = Colors.Red;
-                ResultLabel.Text = "Ошибка завершения.";
-            }
+            ResultLabel.Text = _activeTripId > 0 && _tripRepo.FinishTrip(_activeTripId, _currentUserId, out var cost)
+                ? $"РџРѕРµР·РґРєР° Р·Р°РІРµСЂС€РµРЅР°. Рљ РѕРїР»Р°С‚Рµ: {cost:F2} в‚Ѕ" : "РќРµ СѓРґР°Р»РѕСЃСЊ Р·Р°РІРµСЂС€РёС‚СЊ РїРѕРµР·РґРєСѓ.";
+            RefreshState();
         }
-        catch (Exception ex)
+        catch (Exception ex) { ResultLabel.Text = "РћС€РёР±РєР° Р‘Р”: " + ex.Message; }
+    }
+
+    private void OnCancelBookingClicked(object sender, EventArgs e)
+    {
+        try
         {
-            ResultLabel.TextColor = Colors.Red;
-            ResultLabel.Text = "Ошибка БД: " + ex.Message;
+            var booking = _bookingRepo.GetActiveForUser(_currentUserId);
+            ResultLabel.Text = booking != null && _bookingRepo.Cancel(booking.Id, _currentUserId)
+                ? "Р‘СЂРѕРЅСЊ РѕС‚РјРµРЅРµРЅР°." : "РќРµ СѓРґР°Р»РѕСЃСЊ РѕС‚РјРµРЅРёС‚СЊ Р±СЂРѕРЅСЊ.";
+            RefreshState();
         }
+        catch (Exception ex) { ResultLabel.Text = "РћС€РёР±РєР° Р‘Р”: " + ex.Message; }
     }
 }

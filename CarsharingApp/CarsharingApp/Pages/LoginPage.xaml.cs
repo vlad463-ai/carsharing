@@ -1,6 +1,6 @@
 using CarsharingApp.Data;
 using CarsharingApp.Models;
-using Microsoft.Extensions.Logging.Abstractions;
+
 
 namespace CarsharingApp.Pages;
 
@@ -12,7 +12,7 @@ public partial class LoginPage : ContentPage
     {
         InitializeComponent();
 
-        var db = new DatabaseManager("Host=localhost;Port=5432;Database=Carsharing;Username=postgres;Password=123");
+        var db = DatabaseSettings.CreateDatabase();
         _userRepo = new UserRepository(db);
     }
 
@@ -23,16 +23,22 @@ public partial class LoginPage : ContentPage
             string login = LoginEntry.Text;
             string password = PasswordEntry.Text;
 
-            User user = _userRepo.Authorize(login, password);
+            User? user = _userRepo.Authorize(login, password);
 
             if (user != null)
-                ResultLabel.Text = $"Äîáðî ïîæàëîâàòü, {user.FullName}!";
+            {
+                Navigation.InsertPageBefore(new CarsPage(user.Id), this);
+                await Navigation.PopAsync();
+            }
             else
-                ResultLabel.Text = "Íåâåðíûé ëîãèí èëè ïàðîëü";
+                ResultLabel.Text = "ÐÐµÐ²ÐµÑ€Ð½Ñ‹Ð¹ Ð»Ð¾Ð³Ð¸Ð½ Ð¸Ð»Ð¸ Ð¿Ð°Ñ€Ð¾Ð»ÑŒ";
         }
         catch (Exception ex)
         {
-            ResultLabel.Text = "Îøèáêà ÁÄ: " + ex.Message;
+            ResultLabel.Text = "ÐžÑˆÐ¸Ð±ÐºÐ° Ð‘Ð”: " + ex.Message;
         }
     }
+
+    private async void OnRegisterClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new RegistrationPage());
 }

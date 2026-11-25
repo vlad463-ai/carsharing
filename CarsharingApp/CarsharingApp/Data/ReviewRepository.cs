@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Npgsql;
 using CarsharingApp.Models;
@@ -45,16 +45,26 @@ namespace CarsharingApp.Data
         // Добавить новый отзыв
         public bool Add(Review review)
         {
+            if (review.UserId <= 0 || review.CarId <= 0 || review.Rating < 1 || review.Rating > 5) return false;
             using var conn = _db.Connect();
+            using var transaction = conn.BeginTransaction();
+            using var car = new NpgsqlCommand("SELECT id FROM cars WHERE id=@car FOR UPDATE", conn, transaction);
+            car.Parameters.AddWithValue("@car", review.CarId);
+            if (car.ExecuteScalar() == null) return false;
             using var cmd = new NpgsqlCommand(
                 "INSERT INTO reviews (user_id, car_id, rating, comment) VALUES (@u, @c, @r, @com)",
-                conn);
+                conn, transaction);
             cmd.Parameters.AddWithValue("@u", review.UserId);
             cmd.Parameters.AddWithValue("@c", review.CarId);
             cmd.Parameters.AddWithValue("@r", review.Rating);
             cmd.Parameters.AddWithValue("@com", review.Comment);
 
-            return cmd.ExecuteNonQuery() > 0;
+            cmd.ExecuteNonQuery();
+            using var rating = new NpgsqlCommand("UPDATE cars SET rating=(SELECT AVG(rating) FROM reviews WHERE car_id=@car) WHERE id=@car", conn, transaction);
+            rating.Parameters.AddWithValue("@car", review.CarId);
+            rating.ExecuteNonQuery();
+            transaction.Commit();
+            return true;
         }
 
         // Пересчитать средний рейтинг машины

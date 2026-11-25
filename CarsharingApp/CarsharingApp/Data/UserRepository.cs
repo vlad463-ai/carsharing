@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Npgsql;
 using CarsharingApp.Models;
 
@@ -30,7 +30,7 @@ namespace CarsharingApp.Data
 
             int rows = _db.Insert(
                 @"INSERT INTO users (login, password_hash, full_name, phone, email, rating)
-                  VALUES (@login, @hash, @fio, @phone, @email, 0)",
+                  VALUES (@login, @hash, @fio, @phone, @email, 0) ON CONFLICT DO NOTHING",
                 new NpgsqlParameter("@login", user.Login),
                 new NpgsqlParameter("@hash", user.PasswordHash),
                 new NpgsqlParameter("@fio", user.FullName),
@@ -43,8 +43,9 @@ namespace CarsharingApp.Data
         // ============================================
         // АВТОРИЗАЦИЯ (из задачи друга)
         // ============================================
-        public User Authorize(string login, string password)
+        public User? Authorize(string? login, string? password)
         {
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrEmpty(password)) return null;
             using var conn = _db.Connect();
             using var cmd = new NpgsqlCommand(
                 "SELECT id, login, password_hash, full_name, phone, email, rating FROM users WHERE login = @login",
@@ -63,8 +64,8 @@ namespace CarsharingApp.Data
                 Login = reader.GetString(1),
                 PasswordHash = hash,
                 FullName = reader.GetString(3),
-                Phone = reader.IsDBNull(4) ? null : reader.GetString(4),
-                Email = reader.IsDBNull(5) ? null : reader.GetString(5),
+                Phone = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                Email = reader.IsDBNull(5) ? "" : reader.GetString(5),
                 Rating = reader.GetDecimal(6)
             };
         }
@@ -72,7 +73,7 @@ namespace CarsharingApp.Data
         // ============================================
         // ЛИЧНЫЙ КАБИНЕТ (новые методы)
         // ============================================
-        public User GetUserById(int id)
+        public User? GetUserById(int id)
         {
             using var conn = _db.Connect();
             using var cmd = new NpgsqlCommand(

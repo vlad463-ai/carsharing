@@ -5,12 +5,13 @@ namespace CarsharingApp.Pages;
 public partial class ProfilePage : ContentPage
 {
     private readonly UserRepository _userRepo;
-    private readonly int _currentUserId = 6; // Твой ID из БД
+    private readonly int _currentUserId;
 
-    public ProfilePage()
+    public ProfilePage(int userId)
     {
         InitializeComponent();
-        var db = new DatabaseManager("Host=192.168.1.48;Port=5432;Database=Carsharing;Username=st53-5;Password=535");
+        _currentUserId = userId;
+        var db = DatabaseSettings.CreateDatabase();
         _userRepo = new UserRepository(db);
         LoadData();
     }
@@ -22,33 +23,33 @@ public partial class ProfilePage : ContentPage
             var user = _userRepo.GetUserById(_currentUserId);
             if (user != null)
             {
-                LoginLabel.Text = $"Логин: {user.Login}";
-                FullNameLabel.Text = $"ФИО: {user.FullName}";
-                RatingLabel.Text = $"Рейтинг: {user.Rating:F1} ?";
+                LoginLabel.Text = $"Р›РѕРіРёРЅ: {user.Login}";
+                FullNameLabel.Text = $"Р¤РРћ: {user.FullName}";
+                RatingLabel.Text = $"Р РµР№С‚РёРЅРі: {user.Rating:F1} ?";
                 PhoneEntry.Text = user.Phone;
                 EmailEntry.Text = user.Email;
 
                 var stats = _userRepo.GetUserStats(_currentUserId);
-                StatsLabel.Text = $"Поездок: {stats.tripsCount} | Потрачено: {stats.totalSpent} ?";
+                StatsLabel.Text = $"РџРѕРµР·РґРѕРє: {stats.tripsCount} | РџРѕС‚СЂР°С‡РµРЅРѕ: {stats.totalSpent} ?";
             }
         }
         catch (Exception ex)
         {
-            ResultLabel.Text = "Ошибка: " + ex.Message;
+            ResultLabel.Text = "РћС€РёР±РєР°: " + ex.Message;
             ResultLabel.TextColor = Colors.Red;
         }
     }
 
-    private async void OnSaveClicked(object sender, EventArgs e)
+    private void OnSaveClicked(object sender, EventArgs e)
     {
         try
         {
-            string newPhone = PhoneEntry.Text?.Trim();
-            string newEmail = EmailEntry.Text?.Trim();
+            string newPhone = PhoneEntry.Text?.Trim() ?? "";
+            string newEmail = EmailEntry.Text?.Trim() ?? "";
 
             if (string.IsNullOrEmpty(newPhone) || string.IsNullOrEmpty(newEmail))
             {
-                ResultLabel.Text = "Заполните поля";
+                ResultLabel.Text = "Р—Р°РїРѕР»РЅРёС‚Рµ РїРѕР»СЏ";
                 ResultLabel.TextColor = Colors.Red;
                 return;
             }
@@ -56,18 +57,18 @@ public partial class ProfilePage : ContentPage
             bool ok = _userRepo.UpdateContacts(_currentUserId, newPhone, newEmail);
             if (ok)
             {
-                ResultLabel.Text = "Сохранено!";
+                ResultLabel.Text = "РЎРѕС…СЂР°РЅРµРЅРѕ!";
                 ResultLabel.TextColor = Colors.Green;
             }
             else
             {
-                ResultLabel.Text = "Ошибка";
+                ResultLabel.Text = "РћС€РёР±РєР°";
                 ResultLabel.TextColor = Colors.Red;
             }
         }
         catch (Exception ex)
         {
-            ResultLabel.Text = "Ошибка БД: " + ex.Message;
+            ResultLabel.Text = "РћС€РёР±РєР° Р‘Р”: " + ex.Message;
             ResultLabel.TextColor = Colors.Red;
         }
     }

@@ -3,6 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="CarsharingApp.Pages.CarsPage"
              Title="Автомобили">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Профиль" Clicked="OnProfileClicked" />
+        <ToolbarItem Text="История" Clicked="OnHistoryClicked" />
+        <ToolbarItem Text="Текущая поездка" Clicked="OnTripClicked" />
+        <ToolbarItem Text="Выйти" Clicked="OnLogoutClicked" />
+    </ContentPage.ToolbarItems>
     <VerticalStackLayout Padding="20" Spacing="10">
 
         <!-- ФИЛЬТРЫ -->
@@ -27,6 +33,8 @@
                             <Label Text="{Binding PlateNumber}" FontSize="14" TextColor="Gray" />
                             <Label Text="{Binding DisplayPrice}" FontSize="16" />
                             <Label Text="{Binding Rating, StringFormat='Рейтинг: {0:F1}'}" FontSize="14" />
+                            <Button Text="Забронировать" Clicked="OnBookClicked" />
+                            <Button Text="Отзывы" Clicked="OnReviewsClicked" />
                         </VerticalStackLayout>
                     </Frame>
                 </DataTemplate>

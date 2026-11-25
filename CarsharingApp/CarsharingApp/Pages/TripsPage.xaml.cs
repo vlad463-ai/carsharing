@@ -6,14 +6,13 @@ namespace CarsharingApp.Pages;
 public partial class TripsPage : ContentPage
 {
     private readonly TripRepository _tripRepo;
-    private readonly int _currentUserId = 6;
+    private readonly int _currentUserId;
 
-    public TripsPage()
+    public TripsPage(int userId)
     {
         InitializeComponent();
-
-        //var db = new DatabaseManager("Host=localhost;Port=5432;Database=Carsharing;Username=postgres;Password=123");
-        var db = new DatabaseManager("Host=192.168.1.48;Port=5432;Database=Carsharing;Username=st53-5;Password=535");
+        _currentUserId = userId;
+        var db = DatabaseSettings.CreateDatabase();
         _tripRepo = new TripRepository(db);
 
         LoadTrips();
@@ -27,13 +26,13 @@ public partial class TripsPage : ContentPage
             TripsList.ItemsSource = trips;
 
             if (trips.Count == 0)
-                ResultLabel.Text = "У вас пока нет поездок";
+                ResultLabel.Text = "РЈ РІР°СЃ РїРѕРєР° РЅРµС‚ РїРѕРµР·РґРѕРє";
             else
-                ResultLabel.Text = $"Найдено: {trips.Count} поездок";
+                ResultLabel.Text = $"РќР°Р№РґРµРЅРѕ: {trips.Count} РїРѕРµР·РґРѕРє";
         }
         catch (Exception ex)
         {
-            ResultLabel.Text = "Ошибка: " + ex.Message;
+            ResultLabel.Text = "РћС€РёР±РєР°: " + ex.Message;
         }
     }
 

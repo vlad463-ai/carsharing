@@ -1,126 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using Npgsql;
 using CarsharingApp.Models;
+using Npgsql;
 
-namespace CarsharingApp.Data
+namespace CarsharingApp.Data;
+
+public class BookingRepository(DatabaseManager db)
 {
-    public class BookingRepository
+    public bool IsCarBusy(int carId, DateTime start, DateTime end) => Convert.ToInt64(db.SelectScalar(
+        "SELECT COUNT(*) FROM bookings WHERE car_id=@car AND status='активна' AND @start<end_time AND @end>start_time",
+        new NpgsqlParameter("car", carId), new NpgsqlParameter("start", start), new NpgsqlParameter("end", end))) > 0;
+
+    public bool HasActiveBooking(int userId) => GetActiveForUser(userId) != null;
+
+    public Booking? GetActiveForUser(int userId)
     {
-        private readonly DatabaseManager _db;
+        using var conn = db.Connect();
+        using var cmd = new NpgsqlCommand("SELECT id, car_id, start_time, end_time FROM bookings WHERE user_id=@user AND status='активна' ORDER BY id DESC LIMIT 1", conn);
+        cmd.Parameters.AddWithValue("user", userId);
+        using var reader = cmd.ExecuteReader();
+        return reader.Read() ? new Booking { Id = reader.GetInt32(0), UserId = userId, CarId = reader.GetInt32(1), StartTime = reader.GetDateTime(2), EndTime = reader.GetDateTime(3), Status = "активна" } : null;
+    }
 
-        public BookingRepository(DatabaseManager db)
-        {
-            _db = db;
-        }
+    public bool Create(int userId, int carId, DateTime start, DateTime end)
+    {
+        if (userId <= 0 || carId <= 0 || start >= end) return false;
+        using var conn = db.Connect();
+        using var tx = conn.BeginTransaction();
+        // Lock the user and car so concurrent requests cannot double-book either.
+        using var user = new NpgsqlCommand("SELECT id FROM users WHERE id=@user FOR UPDATE", conn, tx);
+        user.Parameters.AddWithValue("user", userId);
+        if (user.ExecuteScalar() == null) return false;
+        using var car = new NpgsqlCommand("SELECT status_id FROM cars WHERE id=@car FOR UPDATE", conn, tx);
+        car.Parameters.AddWithValue("car", carId);
+        if (car.ExecuteScalar() is not int status || status != 1) return false;
+        using var existing = new NpgsqlCommand("SELECT COUNT(*) FROM bookings WHERE user_id=@user AND status='активна'", conn, tx);
+        existing.Parameters.AddWithValue("user", userId);
+        if (Convert.ToInt64(existing.ExecuteScalar()) > 0) return false;
+        using var insert = new NpgsqlCommand("INSERT INTO bookings(user_id,car_id,start_time,end_time,status) VALUES(@user,@car,@start,@end,'активна')", conn, tx);
+        insert.Parameters.AddWithValue("user", userId);
+        insert.Parameters.AddWithValue("car", carId);
+        insert.Parameters.AddWithValue("start", DateTime.SpecifyKind(start, DateTimeKind.Unspecified));
+        insert.Parameters.AddWithValue("end", DateTime.SpecifyKind(end, DateTimeKind.Unspecified));
+        insert.ExecuteNonQuery();
+        using var update = new NpgsqlCommand("UPDATE cars SET status_id=2 WHERE id=@car", conn, tx);
+        update.Parameters.AddWithValue("car", carId);
+        update.ExecuteNonQuery();
+        tx.Commit();
+        return true;
+    }
 
-        // Проверка, занята ли машина в этот промежуток
-        public bool IsCarBusy(int carId, DateTime start, DateTime end)
-        {
-            using var conn = _db.Connect();
-            using var cmd = new NpgsqlCommand(
-                @"SELECT COUNT(*) FROM bookings 
-                  WHERE car_id = @carId 
-                    AND status = 'активна'
-                    AND (@start < end_time AND @end > start_time)",
-                conn);
-
-            cmd.Parameters.AddWithValue("@carId", carId);
-            cmd.Parameters.AddWithValue("@start", start);
-            cmd.Parameters.AddWithValue("@end", end);
-
-            long count = Convert.ToInt64(cmd.ExecuteScalar());
-            return count > 0;
-        }
-
-        // Проверка, есть ли у пользователя активная бронь
-        public bool HasActiveBooking(int userId)
-        {
-            using var conn = _db.Connect();
-            using var cmd = new NpgsqlCommand(
-                "SELECT COUNT(*) FROM bookings WHERE user_id = @userId AND status = 'активна'",
-                conn);
-            cmd.Parameters.AddWithValue("@userId", userId);
-
-            long count = Convert.ToInt64(cmd.ExecuteScalar());
-            return count > 0;
-        }
-
-        // Создание брони
-        public bool Create(int userId, int carId, DateTime start, DateTime end)
-        {
-            // 1. Проверки
-            if (start >= end) return false; // неверное время
-            if (IsCarBusy(carId, start, end)) return false; // машина занята
-            if (HasActiveBooking(userId)) return false; // у юзера уже есть бронь
-
-            using var conn = _db.Connect();
-            using var transaction = conn.BeginTransaction(); // Транзакция!
-
-            try
-            {
-                // 2. Создаем бронь
-                using var cmdBooking = new NpgsqlCommand(
-                    @"INSERT INTO bookings (user_id, car_id, start_time, end_time, status)
-                      VALUES (@userId, @carId, @start, @end, 'активна')",
-                    conn, transaction);
-                cmdBooking.Parameters.AddWithValue("@userId", userId);
-                cmdBooking.Parameters.AddWithValue("@carId", carId);
-                cmdBooking.Parameters.AddWithValue("@start", start);
-                cmdBooking.Parameters.AddWithValue("@end", end);
-                cmdBooking.ExecuteNonQuery();
-
-                // 3. Меняем статус машины на "Забронирован" (status_id = 2)
-                using var cmdCar = new NpgsqlCommand(
-                    "UPDATE cars SET status_id = 2 WHERE id = @carId",
-                    conn, transaction);
-                cmdCar.Parameters.AddWithValue("@carId", carId);
-                cmdCar.ExecuteNonQuery();
-
-                transaction.Commit();
-                return true;
-            }
-            catch
-            {
-                transaction.Rollback();
-                return false;
-            }
-        }
-
-        // Отмена брони
-        public bool Cancel(int bookingId)
-        {
-            using var conn = _db.Connect();
-            using var transaction = conn.BeginTransaction();
-
-            try
-            {
-                // 1. Получаем car_id, чтобы вернуть статус
-                using var cmdGet = new NpgsqlCommand("SELECT car_id FROM bookings WHERE id = @id", conn, transaction);
-                cmdGet.Parameters.AddWithValue("@id", bookingId);
-                var carIdObj = cmdGet.ExecuteScalar();
-
-                if (carIdObj == null) return false;
-                int carId = Convert.ToInt32(carIdObj);
-
-                // 2. Удаляем (или ставим статус "отменена")
-                using var cmdDel = new NpgsqlCommand("DELETE FROM bookings WHERE id = @id", conn, transaction);
-                cmdDel.Parameters.AddWithValue("@id", bookingId);
-                cmdDel.ExecuteNonQuery();
-
-                // 3. Возвращаем машине статус "Доступен" (status_id = 1)
-                using var cmdCar = new NpgsqlCommand("UPDATE cars SET status_id = 1 WHERE id = @carId", conn, transaction);
-                cmdCar.Parameters.AddWithValue("@carId", carId);
-                cmdCar.ExecuteNonQuery();
-
-                transaction.Commit();
-                return true;
-            }
-            catch
-            {
-                transaction.Rollback();
-                return false;
-            }
-        }
+    public bool Cancel(int bookingId, int userId)
+    {
+        using var conn = db.Connect();
+        using var tx = conn.BeginTransaction();
+        using var booking = new NpgsqlCommand("SELECT car_id FROM bookings WHERE id=@id AND user_id=@user AND status='активна' FOR UPDATE", conn, tx);
+        booking.Parameters.AddWithValue("id", bookingId);
+        booking.Parameters.AddWithValue("user", userId);
+        if (booking.ExecuteScalar() is not int carId) return false;
+        using var active = new NpgsqlCommand("SELECT COUNT(*) FROM trips WHERE booking_id=@id", conn, tx);
+        active.Parameters.AddWithValue("id", bookingId);
+        if (Convert.ToInt64(active.ExecuteScalar()) > 0) return false;
+        using var update = new NpgsqlCommand("UPDATE bookings SET status='отменена' WHERE id=@id; UPDATE cars SET status_id=1 WHERE id=@car AND status_id=2", conn, tx);
+        update.Parameters.AddWithValue("id", bookingId);
+        update.Parameters.AddWithValue("car", carId);
+        update.ExecuteNonQuery();
+        tx.Commit();
+        return true;
     }
 }

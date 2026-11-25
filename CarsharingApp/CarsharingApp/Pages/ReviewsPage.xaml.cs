@@ -6,14 +6,15 @@ namespace CarsharingApp.Pages;
 public partial class ReviewsPage : ContentPage
 {
     private readonly ReviewRepository _reviewRepo;
-    private readonly int _currentCarId = 1; // ID машины (замени на нужный)
-    private readonly int _currentUserId = 6; // ID юзера
+    private readonly int _currentCarId;
+    private readonly int _currentUserId;
 
-    public ReviewsPage()
+    public ReviewsPage(int userId, int carId)
     {
         InitializeComponent();
+        _currentUserId = userId; _currentCarId = carId;
 
-        var db = new DatabaseManager("Host=192.168.1.48;Port=5432;Database=Carsharing;Username=st53-5;Password=535");
+        var db = DatabaseSettings.CreateDatabase();
         _reviewRepo = new ReviewRepository(db);
 
         LoadReviews();
@@ -27,7 +28,7 @@ public partial class ReviewsPage : ContentPage
         }
         catch (Exception ex)
         {
-            DisplayAlert("Ошибка", ex.Message, "OK");
+            DisplayAlert("РћС€РёР±РєР°", ex.Message, "OK");
         }
     }
 
@@ -37,11 +38,11 @@ public partial class ReviewsPage : ContentPage
         {
             if (RatingPicker.SelectedIndex == -1)
             {
-                await DisplayAlert("Ошибка", "Выберите оценку", "OK");
+                await DisplayAlert("РћС€РёР±РєР°", "Р’С‹Р±РµСЂРёС‚Рµ РѕС†РµРЅРєСѓ", "OK");
                 return;
             }
 
-            // Picker возвращает индекс 0..4, а оценка нужна 5..1
+            // Picker РІРѕР·РІСЂР°С‰Р°РµС‚ РёРЅРґРµРєСЃ 0..4, Р° РѕС†РµРЅРєР° РЅСѓР¶РЅР° 5..1
             int rating = 5 - RatingPicker.SelectedIndex;
 
             var review = new Review
@@ -56,20 +57,19 @@ public partial class ReviewsPage : ContentPage
 
             if (success)
             {
-                _reviewRepo.RecalcCarRating(_currentCarId);
                 CommentEditor.Text = "";
                 RatingPicker.SelectedIndex = -1;
                 LoadReviews();
-                await DisplayAlert("Успех", "Отзыв добавлен!", "OK");
+                await DisplayAlert("РЈСЃРїРµС…", "РћС‚Р·С‹РІ РґРѕР±Р°РІР»РµРЅ!", "OK");
             }
             else
             {
-                await DisplayAlert("Ошибка", "Не удалось добавить отзыв", "OK");
+                await DisplayAlert("РћС€РёР±РєР°", "РќРµ СѓРґР°Р»РѕСЃСЊ РґРѕР±Р°РІРёС‚СЊ РѕС‚Р·С‹РІ", "OK");
             }
         }
         catch (Exception ex)
         {
-            await DisplayAlert("Ошибка БД", ex.Message, "OK");
+            await DisplayAlert("РћС€РёР±РєР° Р‘Р”", ex.Message, "OK");
         }
     }
 }
