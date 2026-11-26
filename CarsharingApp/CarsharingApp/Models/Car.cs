@@ -13,6 +13,7 @@ namespace CarsharingApp.Models
         public decimal Rating { get; set; }
 
         public string DisplayName => $"{Brand} {Model}";
-        public string DisplayPrice => $"{PricePerMin} ₽/мин";
+        public string DisplayPrice => $"{PricePerMin:0.##} ₽";
+        public string DisplayPlateNumber => PlateNumberFormatter.Format(PlateNumber);
     }
 }

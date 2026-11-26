@@ -6,7 +6,14 @@
 
     <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
 
-    <Color x:Key="Primary">#512BD4</Color>
+    <Color x:Key="Primary">#16685B</Color>
+    <Color x:Key="Canvas">#F3F6F5</Color>
+    <Color x:Key="Ink">#163730</Color>
+    <Color x:Key="MutedInk">#526B64</Color>
+    <Color x:Key="Line">#DCE6E1</Color>
+    <Color x:Key="SoftGreen">#E8F2EC</Color>
+    <Color x:Key="Field">#F7F9F8</Color>
+    <Color x:Key="RatingInk">#856018</Color>
     <Color x:Key="PrimaryDark">#ac99ea</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#DFD8F7</Color>

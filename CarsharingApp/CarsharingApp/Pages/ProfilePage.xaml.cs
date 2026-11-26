@@ -24,13 +24,13 @@ public partial class ProfilePage : ContentPage
             if (user != null)
             {
                 LoginLabel.Text = $"Логин: {user.Login}";
-                FullNameLabel.Text = $"ФИО: {user.FullName}";
-                RatingLabel.Text = $"Рейтинг: {user.Rating:F1} ?";
+                FullNameLabel.Text = user.FullName;
+                RatingLabel.Text = $"Рейтинг: {user.Rating:F1} ★";
                 PhoneEntry.Text = user.Phone;
                 EmailEntry.Text = user.Email;
 
                 var stats = _userRepo.GetUserStats(_currentUserId);
-                StatsLabel.Text = $"Поездок: {stats.tripsCount} | Потрачено: {stats.totalSpent} ?";
+                StatsLabel.Text = $"Поездок: {stats.tripsCount}   ·   Потрачено: {stats.totalSpent:0.##} ₽";
             }
         }
         catch (Exception ex)

@@ -1,44 +1,83 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CarsharingApp.Pages.CarsPage"
-             Title="Автомобили">
+             xmlns:models="clr-namespace:CarsharingApp.Models;assembly=CarsharingApp.Core"
+             x:Class="CarsharingApp.Pages.CarsPage" Title="Каршеринг" SizeChanged="OnPageSizeChanged">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Профиль" Clicked="OnProfileClicked" />
         <ToolbarItem Text="История" Clicked="OnHistoryClicked" />
         <ToolbarItem Text="Текущая поездка" Clicked="OnTripClicked" />
         <ToolbarItem Text="Выйти" Clicked="OnLogoutClicked" />
     </ContentPage.ToolbarItems>
-    <VerticalStackLayout Padding="20" Spacing="10">
-
-        <!-- ФИЛЬТРЫ -->
-        <Entry x:Name="SearchEntry" 
-               Placeholder="Поиск по марке или модели" 
-               TextChanged="OnFilterChanged" />
-
-        <Entry x:Name="MaxPriceEntry" 
-               Placeholder="Макс. цена за минуту" 
-               Keyboard="Numeric" 
-               TextChanged="OnFilterChanged" />
-
-        <Button x:Name="RefreshButton" Text="Обновить" Clicked="OnRefreshClicked" />
-        <Label x:Name="ResultLabel" />
-
-        <CollectionView x:Name="CarsList">
+    <Grid RowDefinitions="Auto,Auto,Auto,*" Padding="24" RowSpacing="18" MaximumWidthRequest="1280" HorizontalOptions="Fill">
+        <VerticalStackLayout Spacing="6">
+            <Label Text="СВОБОДА ПЕРЕДВИЖЕНИЯ" Style="{StaticResource Eyebrow}" />
+            <Label Text="Куда отправимся сегодня?" Style="{StaticResource PageTitle}" />
+            <Label Text="Выберите автомобиль и забронируйте удобное время." Style="{StaticResource Muted}" />
+        </VerticalStackLayout>
+        <Border Grid.Row="1" Padding="16">
+            <Grid x:Name="FiltersGrid" ColumnDefinitions="*,220,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="16" RowSpacing="10">
+                <VerticalStackLayout x:Name="SearchField" Spacing="6">
+                    <Label Text="Найти автомобиль" Style="{StaticResource FieldLabel}" />
+                    <Entry x:Name="SearchEntry" Placeholder="Марка или модель" TextChanged="OnFilterChanged" />
+                </VerticalStackLayout>
+                <VerticalStackLayout x:Name="PriceField" Grid.Column="1" Spacing="6">
+                    <Label Text="Бюджет, ₽ / мин" Style="{StaticResource FieldLabel}" />
+                    <Entry x:Name="MaxPriceEntry" Placeholder="Любая стоимость" Keyboard="Numeric" TextChanged="OnFilterChanged" />
+                </VerticalStackLayout>
+                <Button x:Name="RefreshButton" Grid.Column="2" Text="Сбросить фильтры" Style="{StaticResource SecondaryButton}" Clicked="OnRefreshClicked" VerticalOptions="End" />
+            </Grid>
+        </Border>
+        <Grid Grid.Row="2" ColumnDefinitions="*,Auto">
+            <Label x:Name="ResultLabel" Style="{StaticResource Muted}" VerticalOptions="Center" />
+            <Label Grid.Column="1" Text="Поминутная аренда" Style="{StaticResource Eyebrow}" VerticalOptions="Center" />
+        </Grid>
+        <CollectionView x:Name="CarsList" Grid.Row="3" SelectionMode="None">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout x:Name="CarsLayout" Orientation="Vertical" Span="2" HorizontalItemSpacing="18" VerticalItemSpacing="18" />
+            </CollectionView.ItemsLayout>
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="20,40" Spacing="10" HorizontalOptions="Center">
+                    <Label Text="Подходящих автомобилей пока нет" Style="{StaticResource SectionTitle}" HorizontalTextAlignment="Center" />
+                    <Label Text="Измените поиск или увеличьте бюджет." Style="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
             <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Margin="0,5" Padding="10">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding DisplayName}" FontSize="18" FontAttributes="Bold" />
-                            <Label Text="{Binding PlateNumber}" FontSize="14" TextColor="Gray" />
-                            <Label Text="{Binding DisplayPrice}" FontSize="16" />
-                            <Label Text="{Binding Rating, StringFormat='Рейтинг: {0:F1}'}" FontSize="14" />
-                            <Button Text="Забронировать" Clicked="OnBookClicked" />
-                            <Button Text="Отзывы" Clicked="OnReviewsClicked" />
+                <DataTemplate x:DataType="models:Car">
+                    <Border Padding="0" Margin="0,0,0,4">
+                        <VerticalStackLayout Spacing="0">
+                            <Grid BackgroundColor="{StaticResource SoftGreen}" HeightRequest="110" Padding="20,12">
+                                <Image Source="car_silhouette.png" HeightRequest="96" WidthRequest="300" HorizontalOptions="Center" VerticalOptions="End" SemanticProperties.Description="Иллюстрация автомобиля" />
+                                <Border Padding="10,5" StrokeThickness="0" BackgroundColor="White" HorizontalOptions="Start" VerticalOptions="Start" StrokeShape="RoundRectangle 8">
+                                    <Label Text="ДОСТУПЕН" FontSize="10" CharacterSpacing="1" TextColor="{StaticResource Primary}" FontAttributes="Bold" />
+                                </Border>
+                            </Grid>
+                            <VerticalStackLayout Padding="20" Spacing="10">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                    <Label Text="{Binding DisplayName}" FontSize="24" FontFamily="OpenSansSemibold" LineBreakMode="TailTruncation" VerticalOptions="Center" />
+                                    <Label Grid.Column="1" Text="{Binding Rating, StringFormat='★ {0:F1}'}" TextColor="{StaticResource RatingInk}" VerticalOptions="Center" />
+                                </Grid>
+                                <HorizontalStackLayout Spacing="10">
+                                    <Label Text="ГОСНОМЕР" Style="{StaticResource Eyebrow}" VerticalOptions="Center" />
+                                    <Border Padding="10,5" StrokeShape="RoundRectangle 6" BackgroundColor="{StaticResource Field}">
+                                        <Label Text="{Binding DisplayPlateNumber}" FontFamily="OpenSansSemibold" CharacterSpacing="1" />
+                                    </Border>
+                                </HorizontalStackLayout>
+                                <BoxView HeightRequest="1" BackgroundColor="{StaticResource Line}" />
+                                <HorizontalStackLayout Spacing="6">
+                                    <Label Text="{Binding DisplayPrice}" FontSize="28" FontFamily="OpenSansSemibold" TextColor="{StaticResource Primary}" />
+                                    <Label Text="/ мин" Style="{StaticResource Muted}" VerticalOptions="Center" />
+                                </HorizontalStackLayout>
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                    <Button Text="Забронировать" Clicked="OnBookClicked" />
+                                    <Button Grid.Column="1" Text="Отзывы" Style="{StaticResource SecondaryButton}" Clicked="OnReviewsClicked" />
+                                </Grid>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>
+

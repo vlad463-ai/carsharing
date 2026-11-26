@@ -1,49 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CarsharingApp.Pages.ReviewsPage"
-             Title="Отзывы">
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="10">
-
-            <Label Text="Оставить отзыв" FontSize="18" FontAttributes="Bold" />
-
-            <Label Text="Оценка:" />
-            <Picker x:Name="RatingPicker">
-                <Picker.ItemsSource>
-                    <x:Array Type="{x:Type x:String}">
-                        <x:String>5 ★</x:String>
-                        <x:String>4 ★</x:String>
-                        <x:String>3 ★</x:String>
-                        <x:String>2 ★</x:String>
-                        <x:String>1 ★</x:String>
-                    </x:Array>
-                </Picker.ItemsSource>
-            </Picker>
-
-            <Label Text="Комментарий:" />
-            <Editor x:Name="CommentEditor" HeightRequest="80" Placeholder="Напишите отзыв..." />
-
-            <Button Text="Отправить" Clicked="OnAddReviewClicked" />
-
-            <Label Text="Все отзывы:" FontSize="18" FontAttributes="Bold" Margin="0,20,0,0" />
-
-            <CollectionView x:Name="ReviewsList">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Margin="0,5" Padding="10">
-                            <VerticalStackLayout>
-                                <Grid ColumnDefinitions="*, Auto">
-                                    <Label Grid.Column="0" Text="{Binding DisplayStars}" FontSize="18" TextColor="Gold" />
-                                    <Label Grid.Column="1" Text="{Binding DisplayDate}" FontSize="12" TextColor="Gray" />
-                                </Grid>
-                                <Label Text="{Binding Comment}" FontSize="14" Margin="0,5,0,0" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-        </VerticalStackLayout>
-    </ScrollView>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.ReviewsPage" Title="Отзывы об автомобиле" >
+    <Grid Padding="24" MaximumWidthRequest="800" HorizontalOptions="Fill">
+        <CollectionView x:Name="ReviewsList" SelectionMode="None">
+            <CollectionView.Header>
+                <VerticalStackLayout Spacing="20" Padding="0,0,0,20">
+                    <VerticalStackLayout Spacing="6"><Label Text="ВПЕЧАТЛЕНИЯ О ПОЕЗДКЕ" Style="{StaticResource Eyebrow}" /><Label Text="Отзывы об автомобиле" Style="{StaticResource PageTitle}" /><Label Text="Ваш опыт поможет другим выбрать автомобиль." Style="{StaticResource Muted}" /></VerticalStackLayout>
+                    <Border Style="{StaticResource Panel}"><VerticalStackLayout Spacing="14">
+                        <Label Text="Поделитесь впечатлениями" Style="{StaticResource SectionTitle}" />
+                        <VerticalStackLayout Spacing="6"><Label Text="Ваша оценка" Style="{StaticResource FieldLabel}" /><Picker x:Name="RatingPicker" Title="Выберите оценку"><Picker.ItemsSource><x:Array Type="{x:Type x:String}"><x:String>5 — Отлично</x:String><x:String>4 — Хорошо</x:String><x:String>3 — Нормально</x:String><x:String>2 — Ниже ожиданий</x:String><x:String>1 — Плохо</x:String></x:Array></Picker.ItemsSource></Picker></VerticalStackLayout>
+                        <VerticalStackLayout Spacing="6"><Label Text="Комментарий" Style="{StaticResource FieldLabel}" /><Editor x:Name="CommentEditor" HeightRequest="100" Placeholder="Что вам понравилось? Что можно улучшить?" /></VerticalStackLayout>
+                        <Button Text="Опубликовать отзыв" Clicked="OnAddReviewClicked" HorizontalOptions="Start" />
+                    </VerticalStackLayout></Border>
+                    <Label Text="Мнения водителей" Style="{StaticResource SectionTitle}" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+            <CollectionView.EmptyView><Label Text="Отзывов пока нет. Поделитесь первым впечатлением." Style="{StaticResource Muted}" Padding="8,20" /></CollectionView.EmptyView>
+            <CollectionView.ItemTemplate><DataTemplate>
+                <Border Padding="22" Margin="0,0,0,12"><VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto"><Label Text="{Binding DisplayStars}" FontSize="20" TextColor="{StaticResource RatingInk}" /><Label Grid.Column="1" Text="{Binding DisplayDate}" Style="{StaticResource Muted}" VerticalOptions="Center" /></Grid>
+                    <Label Text="{Binding Comment}" LineBreakMode="WordWrap" />
+                </VerticalStackLayout></Border>
+            </DataTemplate></CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

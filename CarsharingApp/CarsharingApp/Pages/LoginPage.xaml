@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CarsharingApp.Pages.LoginPage"
-             Title="Вход">
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <Entry x:Name="LoginEntry" Placeholder="Логин" />
-        <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True" />
-        <Button x:Name="LoginButton" Text="Войти" Clicked="OnLoginClicked" />
-        <Button Text="Регистрация" Clicked="OnRegisterClicked" />
-        <Label x:Name="ResultLabel" />
-    </VerticalStackLayout>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.LoginPage" Title="Добро пожаловать" >
+    <ScrollView><Grid Padding="24" VerticalOptions="Center">
+        <VerticalStackLayout MaximumWidthRequest="480" Spacing="20" HorizontalOptions="Fill">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="CARSHARING" Style="{StaticResource Eyebrow}" />
+                <Label Text="Ваш город. Ваш маршрут." Style="{StaticResource PageTitle}" />
+                <Label Text="Войдите, чтобы выбрать автомобиль и начать поездку." Style="{StaticResource Muted}" />
+            </VerticalStackLayout>
+            <Border Style="{StaticResource Panel}"><VerticalStackLayout Spacing="16">
+
+<VerticalStackLayout Spacing="6"><Label Text="Логин" Style="{StaticResource FieldLabel}" /><Entry x:Name="LoginEntry" Placeholder="Введите логин" ReturnType="Next" /></VerticalStackLayout>
+<VerticalStackLayout Spacing="6"><Label Text="Пароль" Style="{StaticResource FieldLabel}" /><Entry x:Name="PasswordEntry" Placeholder="Введите пароль" IsPassword="True" /></VerticalStackLayout>
+<Label x:Name="ResultLabel" TextColor="#AD3E32" LineBreakMode="WordWrap" />
+<Button x:Name="LoginButton" Text="Войти в аккаунт" Clicked="OnLoginClicked" />
+<BoxView HeightRequest="1" BackgroundColor="{StaticResource Line}" />
+<Label Text="Впервые с нами?" Style="{StaticResource Muted}" HorizontalTextAlignment="Center" />
+<Button Text="Создать аккаунт" Style="{StaticResource SecondaryButton}" Clicked="OnRegisterClicked" />
+            </VerticalStackLayout></Border>
+        </VerticalStackLayout>
+    </Grid></ScrollView>
 </ContentPage>

@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CarsharingApp.Pages.ProfilePage"
-             Title="Личный кабинет">
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <Label x:Name="LoginLabel" FontSize="18" FontAttributes="Bold" />
-        <Label x:Name="FullNameLabel" FontSize="16" />
-        <Label x:Name="RatingLabel" FontSize="16" />
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.ProfilePage" Title="Личный кабинет" >
+    <ScrollView><Grid Padding="24" VerticalOptions="Center">
+        <VerticalStackLayout MaximumWidthRequest="600" Spacing="20" HorizontalOptions="Fill">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="ВАШ АККАУНТ" Style="{StaticResource Eyebrow}" />
+                <Label Text="Личный кабинет" Style="{StaticResource PageTitle}" />
+                <Label Text="Контактные данные и статистика ваших поездок." Style="{StaticResource Muted}" />
+            </VerticalStackLayout>
+            <Border Style="{StaticResource Panel}"><VerticalStackLayout Spacing="16">
 
-        <Label Text="Статистика:" FontAttributes="Bold" Margin="0,10,0,0" />
-        <Label x:Name="StatsLabel" />
-
-        <Label Text="Телефон:" Margin="0,10,0,0" />
-        <Entry x:Name="PhoneEntry" />
-
-        <Label Text="Email:" />
-        <Entry x:Name="EmailEntry" Keyboard="Email" />
-
-        <Button x:Name="SaveBtn" Text="Сохранить" Clicked="OnSaveClicked" />
-        <Label x:Name="ResultLabel" />
-    </VerticalStackLayout>
+<Label x:Name="FullNameLabel" Style="{StaticResource SectionTitle}" />
+<Label x:Name="LoginLabel" Style="{StaticResource Muted}" />
+<Label x:Name="RatingLabel" TextColor="{StaticResource RatingInk}" />
+<Border BackgroundColor="{StaticResource SoftGreen}" StrokeThickness="0" Padding="18">
+    <VerticalStackLayout Spacing="8"><Label Text="ВАШИ ПОЕЗДКИ" Style="{StaticResource Eyebrow}" /><Label x:Name="StatsLabel" LineBreakMode="WordWrap" /></VerticalStackLayout>
+</Border>
+<VerticalStackLayout Spacing="6"><Label Text="Телефон" Style="{StaticResource FieldLabel}" /><Entry x:Name="PhoneEntry" Keyboard="Telephone" /></VerticalStackLayout>
+<VerticalStackLayout Spacing="6"><Label Text="Email" Style="{StaticResource FieldLabel}" /><Entry x:Name="EmailEntry" Keyboard="Email" /></VerticalStackLayout>
+<Label x:Name="ResultLabel" TextColor="{StaticResource Primary}" LineBreakMode="WordWrap" />
+<Button x:Name="SaveBtn" Text="Сохранить изменения" Clicked="OnSaveClicked" />
+            </VerticalStackLayout></Border>
+        </VerticalStackLayout>
+    </Grid></ScrollView>
 </ContentPage>

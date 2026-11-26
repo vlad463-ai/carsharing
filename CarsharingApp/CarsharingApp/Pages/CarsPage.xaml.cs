@@ -97,7 +97,21 @@ public partial class CarsPage : ContentPage
 
     private void OnFilterChanged(object sender, TextChangedEventArgs e)
     {
+        if (CarsList == null || ResultLabel == null) return;
         ApplyFilter();
+    }
+
+    private void OnPageSizeChanged(object sender, EventArgs e)
+    {
+        if (CarsLayout == null || FiltersGrid == null) return;
+        CarsLayout.Span = Width >= 980 ? 2 : 1;
+        var narrow = Width < 760;
+        FiltersGrid.ColumnDefinitions[1].Width = narrow ? new GridLength(1, GridUnitType.Star) : new GridLength(220);
+        Grid.SetColumnSpan(SearchField, narrow ? 3 : 1);
+        Grid.SetRow(PriceField, narrow ? 1 : 0);
+        Grid.SetColumn(PriceField, narrow ? 0 : 1);
+        Grid.SetColumnSpan(PriceField, narrow ? 2 : 1);
+        Grid.SetRow(RefreshButton, narrow ? 1 : 0);
     }
 
     private void OnRefreshClicked(object sender, EventArgs e)

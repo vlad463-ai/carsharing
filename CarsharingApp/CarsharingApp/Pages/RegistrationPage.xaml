@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CarsharingApp.Pages.RegistrationPage"
-             Title="Регистрация">
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <Entry x:Name="LoginEntry" Placeholder="Логин" />
-        <Entry x:Name="PasswordEntry" Placeholder="Пароль" IsPassword="True" />
-        <Entry x:Name="FullNameEntry" Placeholder="ФИО" />
-        <Entry x:Name="PhoneEntry" Placeholder="Телефон" Keyboard="Telephone" />
-        <Entry x:Name="EmailEntry" Placeholder="Email" Keyboard="Email" />
-        <Button x:Name="RegisterButton" Text="Зарегистрироваться" Clicked="OnRegisterClicked" />
-        <Label x:Name="ResultLabel" />
-    </VerticalStackLayout>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.RegistrationPage" Title="Регистрация" >
+    <ScrollView><Grid Padding="24" VerticalOptions="Center">
+        <VerticalStackLayout MaximumWidthRequest="540" Spacing="20" HorizontalOptions="Fill">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="НАЧНЁМ ЗНАКОМСТВО" Style="{StaticResource Eyebrow}" />
+                <Label Text="Создайте аккаунт" Style="{StaticResource PageTitle}" />
+                <Label Text="Заполните данные — и выбирайте автомобиль для первой поездки." Style="{StaticResource Muted}" />
+            </VerticalStackLayout>
+            <Border Style="{StaticResource Panel}"><VerticalStackLayout Spacing="16">
+
+<VerticalStackLayout Spacing="6"><Label Text="Логин" Style="{StaticResource FieldLabel}" /><Entry x:Name="LoginEntry" Placeholder="Придумайте логин" /></VerticalStackLayout>
+<VerticalStackLayout Spacing="6"><Label Text="Пароль" Style="{StaticResource FieldLabel}" /><Entry x:Name="PasswordEntry" Placeholder="Не менее 6 символов" IsPassword="True" /></VerticalStackLayout>
+<VerticalStackLayout Spacing="6"><Label Text="ФИО" Style="{StaticResource FieldLabel}" /><Entry x:Name="FullNameEntry" Placeholder="Фамилия Имя Отчество" /></VerticalStackLayout>
+<VerticalStackLayout Spacing="6"><Label Text="Телефон" Style="{StaticResource FieldLabel}" /><Entry x:Name="PhoneEntry" Placeholder="+79001234567" Keyboard="Telephone" /></VerticalStackLayout>
+<VerticalStackLayout Spacing="6"><Label Text="Email" Style="{StaticResource FieldLabel}" /><Entry x:Name="EmailEntry" Placeholder="name@example.com" Keyboard="Email" /></VerticalStackLayout>
+<Label x:Name="ResultLabel" TextColor="#AD3E32" LineBreakMode="WordWrap" />
+<Button x:Name="RegisterButton" Text="Создать аккаунт" Clicked="OnRegisterClicked" />
+            </VerticalStackLayout></Border>
+        </VerticalStackLayout>
+    </Grid></ScrollView>
 </ContentPage>

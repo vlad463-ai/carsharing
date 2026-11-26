@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CarsharingApp.Pages.TripsPage"
-             Title="Мои поездки">
-    <VerticalStackLayout Padding="20" Spacing="10">
-        <Button x:Name="RefreshButton" Text="Обновить" Clicked="OnRefreshClicked" />
-        <Label x:Name="ResultLabel" />
-        <CollectionView x:Name="TripsList">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <Frame Margin="0,5" Padding="10">
-                        <VerticalStackLayout>
-                            <Label Text="{Binding DisplayDate}" FontSize="16" FontAttributes="Bold" />
-                            <Label Text="{Binding DisplayDistance}" FontSize="14" />
-                            <Label Text="{Binding DisplayCost}" FontSize="16" TextColor="Green" />
-                        </VerticalStackLayout>
-                    </Frame>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.TripsPage" Title="История поездок" >
+    <Grid Padding="24" RowDefinitions="Auto,Auto,*" RowSpacing="18" MaximumWidthRequest="900" HorizontalOptions="Fill">
+        <VerticalStackLayout Spacing="6"><Label Text="ВАШИ МАРШРУТЫ" Style="{StaticResource Eyebrow}" /><Label Text="История поездок" Style="{StaticResource PageTitle}" /><Label Text="Все поездки и их стоимость в одном месте." Style="{StaticResource Muted}" /></VerticalStackLayout>
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="12"><Label x:Name="ResultLabel" Style="{StaticResource Muted}" VerticalOptions="Center" /><Button x:Name="RefreshButton" Grid.Column="1" Text="Обновить" Style="{StaticResource SecondaryButton}" Clicked="OnRefreshClicked" /></Grid>
+        <CollectionView x:Name="TripsList" Grid.Row="2" SelectionMode="None">
+            <CollectionView.EmptyView><VerticalStackLayout Padding="24,48" Spacing="10"><Label Text="Здесь появятся ваши поездки" Style="{StaticResource SectionTitle}" HorizontalTextAlignment="Center" /><Label Text="Выберите автомобиль и отправляйтесь в путь." Style="{StaticResource Muted}" HorizontalTextAlignment="Center" /></VerticalStackLayout></CollectionView.EmptyView>
+            <CollectionView.ItemTemplate><DataTemplate>
+                <Border Padding="22" Margin="0,0,0,12">
+                    <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto" RowSpacing="10" ColumnSpacing="16">
+                        <Label Text="{Binding DisplayDate}" FontFamily="OpenSansSemibold" FontSize="18" />
+                        <Label Grid.Column="1" Text="{Binding DisplayCost}" FontSize="22" TextColor="{StaticResource Primary}" FontFamily="OpenSansSemibold" />
+                        <Label Grid.Row="1" Text="{Binding DisplayDistance}" Style="{StaticResource Muted}" />
+                    </Grid>
+                </Border>
+            </DataTemplate></CollectionView.ItemTemplate>
         </CollectionView>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>

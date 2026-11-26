@@ -1,17 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="CarsharingApp.Pages.TripPage"
-             Title="Поездка">
-    <VerticalStackLayout Padding="20" Spacing="15">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.TripPage" Title="Текущая поездка" >
+    <ScrollView><Grid Padding="24" VerticalOptions="Center">
+        <VerticalStackLayout MaximumWidthRequest="600" Spacing="20" HorizontalOptions="Fill">
+            <VerticalStackLayout Spacing="6">
+                <Label Text="В ПУТИ" Style="{StaticResource Eyebrow}" />
+                <Label Text="Ваша поездка" Style="{StaticResource PageTitle}" />
+                <Label Text="Управляйте бронированием и завершайте поездку в одном месте." Style="{StaticResource Muted}" />
+            </VerticalStackLayout>
+            <Border Style="{StaticResource Panel}"><VerticalStackLayout Spacing="16">
 
-        <Label Text="Управление поездкой" FontSize="20" FontAttributes="Bold" HorizontalOptions="Center"/>
-
-        <Button x:Name="StartTripBtn" Text="Начать поездку" Clicked="OnStartTripClicked" />
-        <Button x:Name="FinishTripBtn" Text="Завершить поездку" Clicked="OnFinishTripClicked" IsEnabled="False" />
-        <Button x:Name="CancelBookingBtn" Text="Отменить бронь" Clicked="OnCancelBookingClicked" />
-
-        <Label x:Name="StatusLabel" Text="Ожидание..." FontSize="16" />
-        <Label x:Name="ResultLabel" TextColor="Green" FontSize="16" FontAttributes="Bold" />
+<Border BackgroundColor="{StaticResource SoftGreen}" StrokeThickness="0" Padding="20">
+    <VerticalStackLayout Spacing="8">
+        <Label Text="ТЕКУЩИЙ СТАТУС" Style="{StaticResource Eyebrow}" />
+        <Label x:Name="StatusLabel" Text="Загружаем данные…" Style="{StaticResource SectionTitle}" />
     </VerticalStackLayout>
+</Border>
+<Label Text="Начать поездку можно в пределах времени активной брони." Style="{StaticResource Muted}" />
+<Button x:Name="StartTripBtn" Text="Начать поездку" Clicked="OnStartTripClicked" />
+<Button x:Name="FinishTripBtn" Text="Завершить поездку" Clicked="OnFinishTripClicked" IsEnabled="False" Style="{StaticResource SecondaryButton}" />
+<Button x:Name="CancelBookingBtn" Text="Отменить бронь" Clicked="OnCancelBookingClicked" Style="{StaticResource QuietButton}" />
+<Label x:Name="ResultLabel" TextColor="{StaticResource Primary}" LineBreakMode="WordWrap" />
+            </VerticalStackLayout></Border>
+        </VerticalStackLayout>
+    </Grid></ScrollView>
 </ContentPage>
