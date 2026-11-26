@@ -1,6 +1,6 @@
 using CarsharingApp.Data;
 using CarsharingApp.Models;
-using Microsoft.Extensions.Logging.Abstractions;
+
 
 namespace CarsharingApp.Pages;
 
@@ -12,8 +12,7 @@ public partial class RegistrationPage : ContentPage
     public RegistrationPage()
     {
         InitializeComponent();
-
-        var db = new DatabaseManager("Host=localhost;Port=5432;Database=Carsharing;Username=postgres;Password=123");
+        var db = DatabaseSettings.CreateDatabase();
         _userRepo = new UserRepository(db);
     }
 
@@ -32,13 +31,13 @@ public partial class RegistrationPage : ContentPage
             bool ok = _userRepo.Register(user, PasswordEntry.Text);
 
             if (ok)
-                ResultLabel.Text = "Регистрация успешна!";
+                { await DisplayAlert("Р РµРіРёСЃС‚СЂР°С†РёСЏ", "Р РµРіРёСЃС‚СЂР°С†РёСЏ СѓСЃРїРµС€РЅР°! РўРµРїРµСЂСЊ РІРѕР№РґРёС‚Рµ РІ Р°РєРєР°СѓРЅС‚.", "OK"); await Navigation.PopAsync(); }
             else
-                ResultLabel.Text = "Ошибка регистрации. Проверьте данные.";
+                ResultLabel.Text = "РћС€РёР±РєР° СЂРµРіРёСЃС‚СЂР°С†РёРё. РџСЂРѕРІРµСЂСЊС‚Рµ РґР°РЅРЅС‹Рµ.";
         }
         catch (Exception ex)
         {
-            ResultLabel.Text = "Ошибка БД: " + ex.Message;
+            ResultLabel.Text = "РћС€РёР±РєР° Р‘Р”: " + ex.Message;
         }
     }
 }

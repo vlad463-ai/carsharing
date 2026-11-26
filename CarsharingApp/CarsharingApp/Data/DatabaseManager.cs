@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 
 namespace CarsharingApp.Data
 {
@@ -26,7 +26,7 @@ namespace CarsharingApp.Data
             return cmd.ExecuteNonQuery();
         }
 
-        public object SelectScalar(string sql, params NpgsqlParameter[] parameters)
+        public object? SelectScalar(string sql, params NpgsqlParameter[] parameters)
         {
             using var conn = Connect();
             using var cmd = new NpgsqlCommand(sql, conn);

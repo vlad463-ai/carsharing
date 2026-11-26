@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarsharingApp.Pages.ProfilePage"
+             Title="Личный кабинет">
+    <VerticalStackLayout Padding="20" Spacing="10">
+        <Label x:Name="LoginLabel" FontSize="18" FontAttributes="Bold" />
+        <Label x:Name="FullNameLabel" FontSize="16" />
+        <Label x:Name="RatingLabel" FontSize="16" />
+
+        <Label Text="Статистика:" FontAttributes="Bold" Margin="0,10,0,0" />
+        <Label x:Name="StatsLabel" />
+
+        <Label Text="Телефон:" Margin="0,10,0,0" />
+        <Entry x:Name="PhoneEntry" />
+
+        <Label Text="Email:" />
+        <Entry x:Name="EmailEntry" Keyboard="Email" />
+
+        <Button x:Name="SaveBtn" Text="Сохранить" Clicked="OnSaveClicked" />
+        <Label x:Name="ResultLabel" />
+    </VerticalStackLayout>
+</ContentPage>
