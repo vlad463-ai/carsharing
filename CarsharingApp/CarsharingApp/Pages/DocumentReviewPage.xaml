@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.DocumentReviewPage" Title="Проверка документов">
+ <Grid Padding="24" RowDefinitions="Auto,Auto,*" RowSpacing="16" MaximumWidthRequest="1000">
+  <Label Text="Документы на проверке" Style="{StaticResource PageTitle}" />
+  <Grid Grid.Row="1" ColumnDefinitions="*,Auto"><Label x:Name="ResultLabel" Style="{StaticResource Muted}" /><Button Grid.Column="1" Text="Обновить" Clicked="OnRefreshClicked" Style="{StaticResource SecondaryButton}" /></Grid>
+  <CollectionView Grid.Row="2" x:Name="DocumentsList" SelectionMode="None">
+   <CollectionView.EmptyView><Label Text="Нет комплектов, ожидающих проверки." Style="{StaticResource Muted}" Padding="20" /></CollectionView.EmptyView>
+   <CollectionView.ItemTemplate><DataTemplate>
+    <Border Padding="20" Margin="0,0,0,16"><VerticalStackLayout Spacing="12">
+     <Label Text="{Binding UserName}" Style="{StaticResource SectionTitle}" /><Label Text="{Binding UserId,StringFormat='Пользователь №{0}'}" Style="{StaticResource Muted}" /><Label Text="{Binding DisplayStatus}" />
+     <Label Text="Паспорт" Style="{StaticResource FieldLabel}" /><Button Text="Открыть фото паспорта" Clicked="OnPassportClicked" Style="{StaticResource SecondaryButton}" />
+     <Label Text="Водительские права" Style="{StaticResource FieldLabel}" /><Button Text="Открыть фото прав" Clicked="OnLicenseClicked" Style="{StaticResource SecondaryButton}" />
+     <Grid ColumnDefinitions="*,*" ColumnSpacing="12"><Button Text="Одобрить" Clicked="OnApproveClicked" /><Button Grid.Column="1" Text="Отклонить" Clicked="OnRejectClicked" Style="{StaticResource SecondaryButton}" /></Grid>
+    </VerticalStackLayout></Border>
+   </DataTemplate></CollectionView.ItemTemplate>
+  </CollectionView>
+ </Grid>
+</ContentPage>

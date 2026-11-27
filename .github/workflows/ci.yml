@@ -58,6 +58,8 @@ jobs:
         run: |
           docker cp 'База данных/Carsharing.sql' "$POSTGRES_CONTAINER:/tmp/carsharing.dump"
           docker exec "$POSTGRES_CONTAINER" pg_restore --exit-on-error --schema-only --no-owner --no-privileges -U postgres -d carsharing_test /tmp/carsharing.dump
+          docker cp 'База данных/Migrations/001_documents_notifications.sql' "$POSTGRES_CONTAINER:/tmp/features.sql"
+          docker exec "$POSTGRES_CONTAINER" psql -v ON_ERROR_STOP=1 -U postgres -d carsharing_test -f /tmp/features.sql
       - name: Run database regression tests
         run: dotnet test CarsharingApp/CarsharingApp.BookingTests/CarsharingApp.BookingTests.csproj -c Release --filter TestCategory=Database --logger trx
       - uses: actions/upload-artifact@v4

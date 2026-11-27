@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.DocumentsPage" Title="Мои документы">
+ <ScrollView><VerticalStackLayout Padding="24" Spacing="18" MaximumWidthRequest="700">
+  <Label Text="МОИ ДОКУМЕНТЫ" Style="{StaticResource Eyebrow}" /><Label Text="Паспорт и водительские права" Style="{StaticResource PageTitle}" />
+  <Label Text="Фото JPEG или PNG, до 10 МБ каждое. При замене комплект снова отправляется на проверку." Style="{StaticResource Muted}" />
+  <Border Style="{StaticResource Panel}"><VerticalStackLayout Spacing="14">
+   <Label x:Name="StatusLabel" Style="{StaticResource SectionTitle}" />
+   <Label Text="Паспорт" Style="{StaticResource FieldLabel}" /><Image x:Name="PassportPreview" HeightRequest="160" Aspect="AspectFit" IsVisible="False" /><Label x:Name="PassportLabel" Style="{StaticResource Muted}" /><Button Text="Выбрать фото паспорта" Style="{StaticResource SecondaryButton}" Clicked="OnPickPassport" />
+   <Label Text="Водительские права" Style="{StaticResource FieldLabel}" /><Image x:Name="LicensePreview" HeightRequest="160" Aspect="AspectFit" IsVisible="False" /><Label x:Name="LicenseLabel" Style="{StaticResource Muted}" /><Button Text="Выбрать фото прав" Style="{StaticResource SecondaryButton}" Clicked="OnPickLicense" />
+   <Label x:Name="ResultLabel" TextColor="{StaticResource Primary}" LineBreakMode="WordWrap" />
+   <Button x:Name="SaveButton" Text="Отправить на проверку" Clicked="OnSaveClicked" /><Button Text="Обновить статус" Style="{StaticResource QuietButton}" Clicked="OnRefreshClicked" />
+  </VerticalStackLayout></Border>
+ </VerticalStackLayout></ScrollView>
+</ContentPage>

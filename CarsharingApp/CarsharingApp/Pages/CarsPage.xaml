@@ -5,6 +5,7 @@
              x:Class="CarsharingApp.Pages.CarsPage" Title="Каршеринг" SizeChanged="OnPageSizeChanged">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Профиль" Clicked="OnProfileClicked" />
+        <ToolbarItem Text="Уведомления" Clicked="OnNotificationsClicked" />
         <ToolbarItem Text="История" Clicked="OnHistoryClicked" />
         <ToolbarItem Text="Текущая поездка" Clicked="OnTripClicked" />
         <ToolbarItem Text="Выйти" Clicked="OnLogoutClicked" />
