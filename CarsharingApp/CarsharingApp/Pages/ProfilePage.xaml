@@ -19,6 +19,12 @@
 <VerticalStackLayout Spacing="6"><Label Text="Email" Style="{StaticResource FieldLabel}" /><Entry x:Name="EmailEntry" Keyboard="Email" /></VerticalStackLayout>
 <Label x:Name="ResultLabel" TextColor="{StaticResource Primary}" LineBreakMode="WordWrap" />
 <Button x:Name="SaveBtn" Text="Сохранить изменения" Clicked="OnSaveClicked" />
+<BoxView HeightRequest="1" BackgroundColor="{StaticResource Line}" />
+<Label Text="Документы и уведомления" Style="{StaticResource SectionTitle}" />
+<Label x:Name="DocumentStatusLabel" Style="{StaticResource Muted}" />
+<Button Text="Мои документы" Clicked="OnDocumentsClicked" Style="{StaticResource SecondaryButton}" />
+<Button x:Name="NotificationsButton" Text="Уведомления" Clicked="OnNotificationsClicked" Style="{StaticResource SecondaryButton}" />
+<Button x:Name="ReviewDocumentsButton" Text="Проверить документы пользователей" Clicked="OnReviewDocumentsClicked" IsVisible="False" />
             </VerticalStackLayout></Border>
         </VerticalStackLayout>
     </Grid></ScrollView>

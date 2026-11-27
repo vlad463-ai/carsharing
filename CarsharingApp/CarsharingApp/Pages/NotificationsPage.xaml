@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="CarsharingApp.Pages.NotificationsPage" Title="Уведомления">
+ <Grid Padding="24" RowDefinitions="Auto,Auto,*" RowSpacing="16" MaximumWidthRequest="900">
+  <VerticalStackLayout Spacing="6"><Label Text="ВАШИ СОБЫТИЯ" Style="{StaticResource Eyebrow}" /><Label Text="Уведомления" Style="{StaticResource PageTitle}" /></VerticalStackLayout>
+  <Grid Grid.Row="1" ColumnDefinitions="*,Auto"><Label x:Name="SummaryLabel" Style="{StaticResource Muted}" VerticalOptions="Center" /><Button Grid.Column="1" Text="Обновить" Style="{StaticResource SecondaryButton}" Clicked="OnRefreshClicked" /></Grid>
+  <CollectionView x:Name="NotificationsList" Grid.Row="2" SelectionMode="Single" SelectionChanged="OnSelectionChanged">
+   <CollectionView.EmptyView><Label Text="Уведомлений пока нет." Style="{StaticResource Muted}" Padding="20" /></CollectionView.EmptyView>
+   <CollectionView.ItemTemplate><DataTemplate>
+    <Border Padding="20" Margin="0,0,0,12">
+     <Border.Triggers><DataTrigger TargetType="Border" Binding="{Binding IsRead}" Value="False"><Setter Property="BackgroundColor" Value="{StaticResource SoftGreen}" /><Setter Property="Stroke" Value="{StaticResource Primary}" /></DataTrigger></Border.Triggers>
+     <VerticalStackLayout Spacing="10">
+      <Grid ColumnDefinitions="*,Auto"><Label Text="{Binding Type}" Style="{StaticResource SectionTitle}" /><Label Grid.Column="1" Text="{Binding ReadStatus}" TextColor="{StaticResource Primary}" /></Grid>
+      <Label Text="{Binding Message}" LineBreakMode="WordWrap" /><Label Text="{Binding DisplayDate}" Style="{StaticResource Muted}" />
+     </VerticalStackLayout>
+    </Border>
+   </DataTemplate></CollectionView.ItemTemplate>
+  </CollectionView>
+ </Grid>
+</ContentPage>

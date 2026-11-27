@@ -42,6 +42,9 @@ public partial class CarsPage : ContentPage
     private async void OnProfileClicked(object sender, EventArgs e) =>
         await Navigation.PushAsync(new ProfilePage(_currentUserId));
 
+    private async void OnNotificationsClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new NotificationsPage(_currentUserId));
+
     private async void OnHistoryClicked(object sender, EventArgs e) =>
         await Navigation.PushAsync(new TripsPage(_currentUserId));
 

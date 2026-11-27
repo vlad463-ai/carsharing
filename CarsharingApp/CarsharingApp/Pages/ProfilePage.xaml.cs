@@ -13,8 +13,30 @@ public partial class ProfilePage : ContentPage
         _currentUserId = userId;
         var db = DatabaseSettings.CreateDatabase();
         _userRepo = new UserRepository(db);
-        LoadData();
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        LoadData();
+        try
+        {
+            var db = DatabaseSettings.CreateDatabase();
+            var documents = new DocumentRepository(db);
+            DocumentStatusLabel.Text = "Документы: " + documents.GetStatus(_currentUserId);
+            ReviewDocumentsButton.IsVisible = documents.IsStaff(_currentUserId);
+            var count = new NotificationRepository(db).GetUnreadCount(_currentUserId);
+            NotificationsButton.Text = count > 0 ? $"Уведомления · новых: {count}" : "Уведомления";
+        }
+        catch (Exception ex) { DocumentStatusLabel.Text = "Не удалось обновить статус: " + ex.Message; }
+    }
+
+    private async void OnDocumentsClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new DocumentsPage(_currentUserId));
+    private async void OnNotificationsClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new NotificationsPage(_currentUserId));
+    private async void OnReviewDocumentsClicked(object sender, EventArgs e) =>
+        await Navigation.PushAsync(new DocumentReviewPage(_currentUserId));
 
     private void LoadData()
     {
